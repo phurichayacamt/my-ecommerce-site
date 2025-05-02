@@ -1495,7 +1495,7 @@
         <div class="form-group row">
           <div class="col-md-12">
              <!-- <input type="text" class="form-control" placeholder="Subject">> -->
-            <select id="Subject-select"class="form-control" onchange="show">
+            <select id="Subject-select"class="form-control" onchange="show()">
               <option value="=">Subject-select</option>
             </select>
           
@@ -1753,7 +1753,7 @@ function loadSubject(){
 
 function show (){
   const  select = document.getElementById("Subject-select")
-  console.log(select.value)
+  alert(select.value);
 }
 
 window.onload = function(){
