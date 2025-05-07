@@ -1759,6 +1759,10 @@ function show (){
 window.onload = function(){
      const contact = document.getElementById("contact-head");
      contact.innerHTML = "Hello" ;
+
+     loadDoc("./xml/class_sunday.xml", classXML);
+     loadDoc("./json/class_sunday.json", classJSON);
+     loadSubject('http:localhost:4040/subject')
     }; 
 
   </script>
