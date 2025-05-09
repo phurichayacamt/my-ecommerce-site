@@ -14,13 +14,13 @@ if(filePath ==="./") filePath = "./index.html";
 const extname = path.extname(filePath);
 let contentType = "text/html"
 if(extname === ".css") contentType = "text/css" ;
-if(extname ===".xml") contentType = "text/xml";
-if(extname ===".js")contentType = "application/js";
+if(extname === ".xml") contentType = "text/xml";
+if(extname === ".js") contentType = "application/js";
 
 fs.readFile(filePath, function(err, htmlDoc){
     if(err){
         res.writeHead(200,{'Content-Type': 'text/html'});
-        return res.end("404:File not Found!!!!!")
+        return res.end("404:File not Found")
     }
     res.writeHead(200, {'Content-Type': contentType});
     const q = url.parse(req.url, true).query
