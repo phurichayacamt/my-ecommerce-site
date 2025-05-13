@@ -1474,6 +1474,7 @@
           <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the
             blind
             texts.
+            
           </p>
 
 
@@ -1506,6 +1507,8 @@
                     <div class="col-md-6 mb-3 mb-lg-0">
                       <input id="fname" type="text" class="form-control" placeholder="First name">
                     </div>
+
+
                     <div class="col-md-6">
                       <input id="lname" type="text" class="form-control" placeholder="Last name">
                     </div>
@@ -1605,6 +1608,9 @@
           </div>
 
 
+
+
+
         </div>
       </div>
     </div>
@@ -1634,9 +1640,9 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, odio beatae accusantium.
           </p>
 
-          <form action="#">
+          <form id = "subscribe-form" >
             <div class="d-flex mb-5">
-              <input type="text" class="form-control rounded-0" placeholder="Email">
+              <input id="subscribe-email" type ="email" class="form-control rounded-0" placeholder="Email">
               <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
             </div>
           </form>
@@ -1646,6 +1652,7 @@
 
       <div class="row pt-5 mt-5 text-center">
         <div class="col-md-12">
+
 
           <div class=" pt-5">
             <p>
@@ -1714,7 +1721,7 @@
       console.log(class_list);
       var html_text = "";
       for (var i = 0; i < class_list.length; i++) {
-        var single_page = class_list[i].getElementsByTagName("single-page")[0].childNodes[0].nodeValue;
+        var single_page = class_list[i].getElementsByTagName("single-page")[0].childNodes[0].nodeValue;//
         var image = class_list[i].getElementsByTagName("image")[0].childNodes[0].nodeValue;
         var time = class_list[i].getElementsByTagName("time")[0].childNodes[0].nodeValue;
         var name = class_list[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
@@ -1754,10 +1761,12 @@
           '<div class="class-item d-flex align-items-center">' +
           '<a href="' + jsonObj.classes[i]["single-page"] + '" class="class-item-thumbnail">' +
           '<img src="' + jsonObj.classes[i]["image"] + '" alt="Image">' +
+
           '</a>' +
           '<div class="class-item-text">' +
           '<span>' + jsonObj.classes[i]["time"] + '</span>' +
           '<h2><a href="' + jsonObj.classes[i]["single-page"] + '">' + jsonObj.classes[i]["name"] + '</a></h2>' +
+
           '<span>' + jsonObj.classes[i]["instructor"] + '</span>,' +
           '<span>' + jsonObj.classes[i]["duration"] + '</span>,' +
           '</div>' +
@@ -1784,6 +1793,11 @@
         })
     }
 
+
+
+
+//King
+
     function show() {
       const select = document.getElementById("subject-select");
       alert(select.value)
@@ -1794,18 +1808,23 @@
 
       loadDoc("./xml/class_sunday.xml", classXML);
       loadDoc("./json/class_sunday.json", classJSON);
-      loadSubject('http://localhost:4000/api/subject');
+      // loadSubject('http://localhost:4000/api/subject');
+ 
+      document.getElementById('subscribe-form').addEventListener('submit', e => subscribeSubmit(e));
     };
+
+   
     //AJAX Function
     const ajax = async (config) => {
       const request = await fetch(config.url, {
-        method: config.method || 'GET',
+        method: config.method,
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(config.data)
       });
+      console.log(request);
       const response = await request.json();
       console.log(response);
       return response;
@@ -1814,6 +1833,7 @@
 
 
     function submitContact() {
+    
       const data = {
         fname: document.getElementById("fname").value,
         lname: document.getElementById("lname").value,
@@ -1822,13 +1842,48 @@
         message: document.getElementById("message").value
       }
       console.log(data);
-      let response =ajax({
+      
+      let response = ajax({
         url: 'http://localhost:4000/api/contact',
         method: 'POST',
         data: data
       });
       console.log(response);
+
     }
+
+async function subscribeSubmit(e){
+  e.preventDefault();
+  console.log('Hi');
+
+  const email={email:document.getElementById('subscribe-email').value};
+  console.log(email);
+  const response = await fetch ('http://localhost:4000/api/subscribe',{
+    method : 'POST',
+    headers : {'Content-type' : 'application/json'},
+    body : JSON.stringify(email)
+  });
+  console.log(response);
+  
+}
+  
+
+   // document.getElementById('subscribe-form').addEventListener('submit',async (e)=>{
+     // e.preventDefault();  //not refact page
+      //let subscribeData = {
+      //  email : document.getElementById('subscribe-email').value
+       //                   }
+       //                   const response = await fetch('http://localhost:4000/api/subscribe',{
+        //                    method: 'POST',
+         //                   headers:{'Content-Type':'application/json'},
+         //                   body: JSON.stringify(subscribeData)
+
+          //                });
+          //                console.log(response);
+           //               let result = await response.json();
+           //               console.log(result.message)
+
+    //})
 
   </script>
 </body>
