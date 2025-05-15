@@ -6,4 +6,5 @@ router.post('/', (req, res) => {
    console.log('Content form submited',{fname,lname,email,subject,message});
    res.status(200).json({status:"Message Recieved"});
 })
+
 module.exports = router;

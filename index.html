@@ -1544,55 +1544,67 @@
                 </form>
               </div>
               <div role="tabpanel" class="tab-pane" id="register">
-                <form method="post" data-aos="fade">
+                <form id="registerForm" data-aos="fade">
                   <div class="form-group row">
                     <div class="col-md-6 mb-3 mb-lg-0">
-                      <input type="text" class="form-control" placeholder="First name">
+                      <input id="firstName" type="text" class="form-control" placeholder="First name">
                     </div>
                     <div class="col-md-6">
-                      <input type="text" class="form-control" placeholder="Last name">
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                      <input type="text" class="form-control" placeholder="Occupation">
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                      <input type="email" class="form-control" placeholder="Email">
+                      <input id="lastName" type="text" class="form-control" placeholder="Last name">
                     </div>
                   </div>
 
                   <div class="form-group row">
                     <div class="col-md-6">
+                      <select id="occupationCategory" class="form-control">
+                        <option value="">-- select occupationCategory --</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <select id="occupation" class="form-control">
+                        <option value="">-- select occupation --</option>
+                      </select>
+                    </div>
+                  </div>
 
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <input id="email" type="email" class="form-control" placeholder="Email">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                      <input id="password" type="password" class="form-control" placeholder="Password">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-6">
                       <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Register">
                     </div>
                   </div>
-
                 </form>
+                <div id="registerResult" class="mt-2"></div>
               </div>
+
               <div role="tabpanel" class="tab-pane" id="sign-in">
-                <form method="post" data-aos="fade">
+                <form method="post" id="loginForm" data-aos="fade">
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <input type="text" class="form-control" placeholder="Username">
+                      <input type="text" id="login-user" class="form-control" placeholder="Username">
                     </div>
                   </div>
 
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <input type="password" class="form-control" placeholder="Password">
+                      <input type="password" id="login-password" class="form-control" placeholder="Password">
                     </div>
                   </div>
 
                   <div class="form-group row">
                     <div class="col-md-6">
-
                       <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Login">
                     </div>
                   </div>
@@ -1616,7 +1628,7 @@
         <div class="col-md-4">
           <h3 class="text-white">About Workout</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam facere optio eligendi.</p>
-         
+
         </div>
 
         <div class="col-md-3 ml-auto">
@@ -1634,10 +1646,9 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, odio beatae accusantium.
           </p>
 
-           <form id="subscribe-form">
+          <form id="subscribe-form">
             <div class="form-group d-flex">
-              <input id="subscribe-email" type= "email" class="form-control-rounded-0"
-                placeholder="Enter email address">
+              <input id="subscribe-email" type="email" class="form-control-rounded-0" placeholder="Enter email address">
               <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
             </div>
           </form>
@@ -1801,7 +1812,65 @@
         e.preventDefault();
         subscribeSubmit(e);
       });
+      const catSelect = document.getElementById('occupationCategory');
+      fetch('json/occupation-cat.json')
+        .then(res => res.json())
+        .then(categories => {
+          categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat.toLowerCase();
+            opt.textContent = cat;
+            catSelect.appendChild(opt);
+          });
+        })
+        .catch(err => console.error('Error loading categories:', err));
+
+      // —————— จับ change แล้วโหลดอาชีพ ——————
+      catSelect.addEventListener('change', function () {
+        const category = this.value;
+        const occSelect = document.getElementById('occupation');
+        occSelect.innerHTML = '<option value="">-- selectoccupation --</option>';
+        if (!category) return;
+        fetch(`json/${category}.json`)
+          .then(res => res.json())
+          .then(occupations => {
+            occupations.forEach(occ => {
+              const opt = document.createElement('option');
+              opt.value = occ;
+              opt.textContent = occ;
+              occSelect.appendChild(opt);
+            });
+          })
+          .catch(err => console.error('Error loading occupations:', err));
+      });
+
+      // —————— submit Register ——————
+      document.getElementById('registerForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const data = {
+          username: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
+          occupationCategory: document.getElementById('occupationCategory').value,
+          occupation: document.getElementById('occupation').value,
+          email: document.querySelector('#registerForm #email').value,
+          password: document.querySelector('#registerForm #password').value
+        };
+        try {
+          const resp = await fetch('http://localhost:4000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+
+          });
+          const result = await resp.json();
+          document.getElementById('registerResult').textContent = result.message || result.error;
+          alert("Register succesfully")
+        } catch (err) {
+          console.error(err);
+          document.getElementById('registerResult').textContent = 'An error occurred.';
+        }
+      });
     };
+
     //AJAX Function 1
     const ajax = async (config) => {
       const request = await fetch(config.url, {
@@ -1852,8 +1921,24 @@
         body: JSON.stringify(email)
       });
 
-      console.log(response);  
+      console.log(response);
     }
+
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const creds = {
+        username: document.getElementById('login-user').value,
+        password: document.getElementById('login-password').value
+      };
+      const resp = await fetch('http://localhost:4000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(creds)
+      });
+      const result = await resp.json();
+      // document.getElementById('loginResult').textContent = result.message || result.error;
+      alert(result.message || result.error)
+    });
 
 
   </script>
