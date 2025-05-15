@@ -1812,6 +1812,7 @@
         e.preventDefault();
         subscribeSubmit(e);
       });
+      
       const catSelect = document.getElementById('occupationCategory');
       fetch('json/occupation-cat.json')
         .then(res => res.json())
@@ -1909,6 +1910,7 @@
 
     async function subscribeSubmit(e) {
       e.preventDefault();
+
       console.log("HI");
       const email = {
         email: document.getElementById("subscribe-email").value
