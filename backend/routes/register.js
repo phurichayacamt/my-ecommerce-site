@@ -1,7 +1,7 @@
 const express = require('express');
-const fs      = require('fs');
-const path    = require('path');
-const router  = express.Router();
+const fs = require('fs');
+const path = require('path');
+const router = express.Router();
 const dataPath = path.join(__dirname, '..', 'data', 'user.json');
 
 router.post('/', (req, res) => {
